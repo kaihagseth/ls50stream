@@ -1,0 +1,28 @@
+#!/bin/bash
+# (From Limbo's installer.)
+set -u
+mkdir -p /Library/Logs/LS50Stream
+chown root:wheel /Library/LaunchDaemons/io.github.kaihagseth.ls50stream.engine.plist
+chmod 644 /Library/LaunchDaemons/io.github.kaihagseth.ls50stream.engine.plist
+# Keep the log from growing without bound (newsyslog rotates at 5 MB, keeps 3)
+echo "/Library/Logs/LS50Stream/ls50streamd.log  root:wheel  644  3  5120  *  N" > /etc/newsyslog.d/io.github.kaihagseth.ls50stream.conf
+
+launchctl enable system/io.github.kaihagseth.ls50stream.engine
+# Retry while launchd may still be finishing the previous unload ("Bootstrap failed: 5")
+for _ in $(seq 1 20); do
+    launchctl bootstrap system /Library/LaunchDaemons/io.github.kaihagseth.ls50stream.engine.plist 2>/dev/null && break
+    launchctl print system/io.github.kaihagseth.ls50stream.engine >/dev/null 2>&1 && break
+    sleep 0.5
+done
+launchctl kickstart system/io.github.kaihagseth.ls50stream.engine 2>/dev/null || echo "LS50Stream engine could not be started" >&2
+
+# (Re)load the audio driver only if it is new or changed: restarting coreaudiod interrupts all audio.
+before=$(cat /private/tmp/io.github.kaihagseth.ls50stream.driver-before 2>/dev/null)
+tmp=$(mktemp)
+cp /Library/Audio/Plug-Ins/HAL/LS50Stream.driver/Contents/MacOS/LS50Stream "$tmp" && codesign --remove-signature "$tmp" 2>/dev/null
+after=$(shasum -a 256 "$tmp" | cut -d' ' -f1)
+rm -f "$tmp" /private/tmp/io.github.kaihagseth.ls50stream.driver-before
+if [ "$before" != "$after" ]; then
+    launchctl kickstart -k system/com.apple.audio.coreaudiod 2>/dev/null || killall coreaudiod 2>/dev/null || true
+fi
+exit 0

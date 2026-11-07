@@ -1,0 +1,6 @@
+.DS_Store
+/build/
+/engine/target/
+__pycache__/
+/prototype/capture/Capture.app/
+*.f32

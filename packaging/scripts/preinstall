@@ -1,0 +1,16 @@
+#!/bin/bash
+# Stop a previous engine before its files are replaced. (From Limbo's installer.)
+launchctl bootout system/io.github.kaihagseth.ls50stream.engine 2>/dev/null || true
+for _ in $(seq 1 40); do
+    launchctl print system/io.github.kaihagseth.ls50stream.engine >/dev/null 2>&1 || break
+    sleep 0.25
+done
+# Remember the installed driver, so postinstall only restarts system audio if it changes
+DRIVER="/Library/Audio/Plug-Ins/HAL/LS50Stream.driver/Contents/MacOS/LS50Stream"
+rm -f /private/tmp/io.github.kaihagseth.ls50stream.driver-before
+if [ -f "$DRIVER" ]; then
+    tmp=$(mktemp)
+    cp "$DRIVER" "$tmp" && codesign --remove-signature "$tmp" 2>/dev/null && shasum -a 256 "$tmp" | cut -d' ' -f1 > /private/tmp/io.github.kaihagseth.ls50stream.driver-before
+    rm -f "$tmp"
+fi
+exit 0

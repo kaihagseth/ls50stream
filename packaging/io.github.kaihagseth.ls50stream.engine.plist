@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>io.github.kaihagseth.ls50stream.engine</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/Application Support/LS50Stream/ls50streamd</string>
+	</array>
+	<!-- The audio driver (inside coreaudiod) connects here to get the shared audio buffer -->
+	<key>MachServices</key>
+	<dict>
+		<key>io.github.kaihagseth.ls50stream.audio</key>
+		<true/>
+	</dict>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<key>ProcessType</key>
+	<string>Interactive</string>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>RUST_LOG</key>
+		<string>info</string>
+	</dict>
+	<key>StandardErrorPath</key>
+	<string>/Library/Logs/LS50Stream/ls50streamd.log</string>
+</dict>
+</plist>
