@@ -15,8 +15,14 @@ their owner and are used here only to say which speaker this works with.
 
 ## Install
 
-There are no prebuilt downloads yet; build the installer from source. You need
-the Xcode command line tools (`xcode-select --install`) and Rust
+Download `LS50Stream-<version>.pkg` from the
+[latest release](https://github.com/kaihagseth/ls50stream/releases/latest) and
+open it (asks for an admin password; restarts system audio once). It is signed
+and notarized by Apple. Newer versions install over older ones.
+
+### Or build it from source
+
+You need the Xcode command line tools (`xcode-select --install`) and Rust
 (<https://rustup.rs>), with both Mac targets:
 
 ```sh
@@ -118,6 +124,10 @@ Mac apps -> "KEF LS50W" device (LS50Stream.driver, inside coreaudiod)
   own volume is separate.
 
 ## Build and install (details)
+
+`scripts/build.sh --release` signs with your Developer ID, notarizes and staples
+the package; `scripts/release.sh` does that and publishes it as a GitHub
+release `v<version>` (bump `version` in `engine/Cargo.toml` first).
 
 ```sh
 scripts/build.sh                         # -> build/LS50Stream-<version>.pkg
