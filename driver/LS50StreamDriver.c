@@ -39,7 +39,7 @@ enum {
 // Rates the speakers accept; the highest has the least delay (they buffer a fixed amount of data).
 static const Float64 kSampleRates[] = {48000.0, 96000.0, 192000.0};
 #define kSampleRateCount (sizeof kSampleRates / sizeof kSampleRates[0])
-#define kDefaultSampleRate 192000.0
+#define kDefaultSampleRate 48000.0 // safe on Wi-Fi; 96/192 kHz lower the delay on a cable
 
 // ---------------------------------------------------------------------------------------------
 // State

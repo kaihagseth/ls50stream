@@ -35,8 +35,10 @@ open build/LS50Stream-*.pkg         # asks for an admin password; restarts syste
 
 Then choose **KEF LS50W** as the output (menu bar sound icon, or System
 Settings → Sound). It appears while the speaker is on and on the same network.
-The sample rate (48, 96 or 192 kHz; default 192) is set in Audio MIDI Setup:
-use 96 kHz if the Mac is on Wi-Fi and you hear stutters.
+The sample rate (48, 96 or 192 kHz; default 48) is set in Audio MIDI Setup.
+48 kHz is the safe choice on Wi-Fi. With the Mac on a network cable, 96 or
+192 kHz lowers the delay (measured on a cable: about 0.7 s at 48 kHz, 0.45 s at
+96, 0.35 s at 192; on Wi-Fi a safety margin adds up to 1.5 s).
 
 To remove it: `sudo "/Library/Application Support/LS50Stream/uninstall.sh"`.
 
@@ -62,10 +64,11 @@ Mac apps -> "KEF LS50W" device (LS50Stream.driver, inside coreaudiod)
          -> the speaker (told to play it via UPnP AVTransport)
 ```
 
-- **Rates:** 48, 96 or 192 kHz (default 192), set in Audio MIDI Setup. The
-  stream uses the device's rate unchanged; a higher rate means less delay (the
-  speaker buffers ~1 MB): ~0.9 s at 192 kHz, ~1.8 s at 96, ~3.6 s at 48. The
-  device reports this delay to macOS, so video players can keep lip sync.
+- **Rates:** 48, 96 or 192 kHz (default 48 since 0.5, as 192 stutters on
+  Wi-Fi), set in Audio MIDI Setup. The stream uses the device's rate
+  unchanged; a higher rate means less delay (the speaker buffers ~1 MB):
+  ~0.9 s at 192 kHz, ~1.8 s at 96, ~3.6 s at 48. The device reports this delay
+  to macOS, so video players can keep lip sync.
 - **Wi-Fi vs. wired (2026-10-11):** with the Mac wired, 192 kHz (~9.2 Mbit/s)
   plays smoothly. With the Mac on Wi-Fi the stream crosses the air twice, and
   192 kHz stuttered a little even with 0.1.1's larger writes. 96 kHz
