@@ -1,5 +1,5 @@
 // XPC listener that hands the shared audio region to LS50Stream.driver.
-// C because XPC's API is block-based; called once from Rust (src/shm.rs). From Limbo.
+// C because XPC's API is block-based; called once from Rust (src/shm.rs).
 
 #include <xpc/xpc.h>
 #include <dispatch/dispatch.h>

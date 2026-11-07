@@ -1,5 +1,4 @@
 //! Shared-memory audio ring written by LS50Stream.driver. Layout: driver/ls50stream_shm.h.
-//! Adapted from Limbo (src/audio/shm.rs).
 
 use std::ffi::CString;
 use std::sync::atomic::{AtomicU32, AtomicU64, Ordering};

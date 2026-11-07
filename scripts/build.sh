@@ -7,7 +7,6 @@
 # keychain (override with DEVELOPER_ID_APP / DEVELOPER_ID_INSTALLER) and the notarytool keychain
 # profile NOTARY_PROFILE (default "ls50stream"), created once with:
 #   xcrun notarytool store-credentials ls50stream --apple-id <email> --team-id <team id>
-# Adapted from Limbo's build script.
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)

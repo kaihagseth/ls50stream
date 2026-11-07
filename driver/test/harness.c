@@ -1,6 +1,6 @@
 // Development harness for LS50Stream.driver: loads the plug-in outside coreaudiod, checks its
 // properties and rate switching, waits for ls50streamd to publish the device, then plays audio
-// through it while emulating the HAL's IO cycle. Adapted from Limbo's harness.
+// through it while emulating the HAL's IO cycle.
 //   harness <path/to/LS50Stream.driver/Contents/MacOS/LS50Stream> <seconds> [audio.f32 [rate]]
 // audio.f32: raw interleaved stereo float32 at `rate` (default 192000), e.g. from
 //   ffmpeg -i song.mp3 -ar 192000 -ac 2 -f f32le song.f32

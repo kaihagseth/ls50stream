@@ -1,5 +1,5 @@
 #!/bin/bash
-# Stop a previous engine before its files are replaced. (From Limbo's installer.)
+# Stop a previous engine before its files are replaced.
 launchctl bootout system/io.github.kaihagseth.ls50stream.engine 2>/dev/null || true
 for _ in $(seq 1 40); do
     launchctl print system/io.github.kaihagseth.ls50stream.engine >/dev/null 2>&1 || break

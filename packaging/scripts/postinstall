@@ -1,5 +1,5 @@
 #!/bin/bash
-# (From Limbo's installer.)
+# Starts the engine and loads the audio driver after installing.
 set -u
 mkdir -p /Library/Logs/LS50Stream
 chown root:wheel /Library/LaunchDaemons/io.github.kaihagseth.ls50stream.engine.plist

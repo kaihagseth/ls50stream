@@ -4,7 +4,7 @@
 // which streams it to the speakers over DLNA. Objects: plug-in, one device, one stereo output stream,
 // a master volume and a master mute control. The device runs on its own clock (mach time at the nominal
 // rate: 48, 96 or 192 kHz, set in Audio MIDI Setup). It is only published while ls50streamd sees the
-// speakers on the network. Adapted from Limbo.driver.
+// speakers on the network.
 
 #include <CoreAudio/AudioServerPlugIn.h>
 #include <dispatch/dispatch.h>

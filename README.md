@@ -51,8 +51,6 @@ serial numbers of the speakers it sees are in the log,
 ## License
 
 GPL-3.0-or-later; see [LICENSE](LICENSE). Copyright (C) 2026 Kai Hagseth.
-The audio driver, shared-memory ring and installer are adapted from the
-author's earlier project, Limbo.
 
 ## How it works
 
@@ -123,7 +121,7 @@ Mac apps -> "KEF LS50W" device (LS50Stream.driver, inside coreaudiod)
   rate change, or if it dropped our stream (e.g. someone switched its input).
   After 30 s without audio ls50streamd sends `Stop`. While idle it streams
   silence, so pauses resume instantly.
-- Device volume/mute scale the signal digitally (like Limbo); the speaker's
+- Device volume/mute scale the signal digitally; the speaker's
   own volume is separate.
 
 ## Build and install (details)

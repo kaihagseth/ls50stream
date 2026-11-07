@@ -3,7 +3,6 @@
 // ls50streamd owns the region and hands it to the driver over XPC (mach service LS50STREAM_MACH_SERVICE).
 // The driver writes the device's output mix; ls50streamd streams it to the speakers over HTTP (DLNA).
 // Mirrored in Rust: engine/src/shm.rs. Bump LS50STREAM_SHM_VERSION on any layout change.
-// Adapted from Limbo (limbo_shm.h).
 
 #ifndef LS50STREAM_SHM_H
 #define LS50STREAM_SHM_H
