@@ -1,6 +1,6 @@
 [package]
 name = "ls50stream"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 authors = ["Kai Hagseth"]
 license = "GPL-3.0-or-later"
