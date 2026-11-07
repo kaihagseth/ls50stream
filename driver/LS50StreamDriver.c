@@ -12,7 +12,6 @@
 #include <math.h>
 #include <pthread.h>
 #include <stdatomic.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <xpc/xpc.h>
@@ -210,8 +209,7 @@ static void Detach(void) {
 static void Attach(void) {
     // On gQueue
     if (!gConnection) {
-        const char *service = getenv("LS50STREAM_MACH_SERVICE");
-        gConnection = xpc_connection_create_mach_service(service ? service : LS50STREAM_MACH_SERVICE, gQueue, 0);
+        gConnection = xpc_connection_create_mach_service(LS50STREAM_MACH_SERVICE, gQueue, 0);
         xpc_connection_t connection = gConnection;
         xpc_connection_set_event_handler(connection, ^(xpc_object_t event) {
             if (connection != gConnection) return;

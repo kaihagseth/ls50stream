@@ -95,12 +95,10 @@ pub fn wav_header(rate: u32, data_bytes: u32) -> Vec<u8> {
 }
 
 /// Audio bytes per track: as much as a WAV header can describe (~1 h at
-/// 192 kHz, ~4 h at 48 kHz), or `secs` when set (for testing the chaining).
-pub fn track_bytes(rate: u32, secs: Option<f64>) -> u32 {
-    let frame = (CHANNELS * BYTES_PER_SAMPLE) as u64;
-    let max = (u32::MAX - WAV_HEADER_BYTES) as u64;
-    let wanted = secs.map_or(max, |s| (s * bytes_per_second(rate)) as u64).clamp(frame, max);
-    (wanted / frame * frame) as u32
+/// 192 kHz, ~4 h at 48 kHz).
+pub fn track_bytes() -> u32 {
+    let frame = (CHANNELS * BYTES_PER_SAMPLE) as u32;
+    (u32::MAX - WAV_HEADER_BYTES) / frame * frame
 }
 
 /// float32 samples -> signed 24-bit little-endian
@@ -231,11 +229,10 @@ mod tests {
     #[test]
     fn track_sizes() {
         // Whole frames, as much as fits: ~3,728 s at 192 kHz
-        let max = track_bytes(192000, None);
+        let max = track_bytes();
         assert_eq!(max % 6, 0);
         assert!(max as u64 + 68 <= u32::MAX as u64);
         assert!((max as f64 / bytes_per_second(192000) - 3728.0).abs() < 1.0);
-        assert_eq!(track_bytes(48000, Some(10.0)), 2_880_000);
     }
 
     #[test]

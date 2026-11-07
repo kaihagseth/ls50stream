@@ -14,6 +14,8 @@ OUT="$ROOT/build"
 VERSION=$(grep -m1 '^version' "$ROOT/engine/Cargo.toml" | cut -d'"' -f2)
 MIN_MACOS=14.0
 export PATH="$HOME/.cargo/bin:$PATH"
+# Keep local paths (home folder, checkout) out of the binaries' panic messages
+export RUSTFLAGS="${RUSTFLAGS:-} --remap-path-prefix=$HOME=~ --remap-path-prefix=$ROOT=ls50stream"
 
 RELEASE=0
 case "${1:-}" in

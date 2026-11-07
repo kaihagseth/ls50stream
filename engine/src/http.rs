@@ -31,8 +31,6 @@ pub static SENT_RATE: AtomicU32 = AtomicU32::new(0);
 pub static SESSION: AtomicU64 = AtomicU64::new(0);
 /// Length of each track in the current session, in ms of audio.
 pub static TRACK_MS: AtomicU64 = AtomicU64::new(0);
-/// Track length override in ms (0 = as long as a WAV header allows), for testing.
-pub static TRACK_OVERRIDE_MS: AtomicU64 = AtomicU64::new(0);
 /// Extra delay (ms) kept in the speaker's buffer as a margin against network
 /// stalls; set by the delay monitor, used when a session starts.
 pub static MARGIN_MS: AtomicU64 = AtomicU64::new(0);
@@ -61,11 +59,6 @@ pub fn parse_path(path: &str) -> Option<(u32, u32)> {
     let rest = path.strip_prefix("/stream/")?.strip_suffix(".wav")?;
     let (rate, track) = rest.split_once('/')?;
     Some((rate.parse().ok()?, track.parse().ok()?))
-}
-
-fn track_bytes_now(rate: u32) -> u32 {
-    let ms = TRACK_OVERRIDE_MS.load(Ordering::Relaxed);
-    track_bytes(rate, (ms > 0).then_some(ms as f64 / 1000.0))
 }
 
 pub async fn serve(listener: TcpListener, live: Live, current_rate: Arc<dyn Fn() -> u32 + Send + Sync>) {
@@ -101,7 +94,7 @@ async fn handle(mut stream: TcpStream, live: Live, rate: u32) -> std::io::Result
         return Ok(());
     }
 
-    let data_bytes = track_bytes_now(rate);
+    let data_bytes = track_bytes();
     // Track 0 starts a session; later tracks resume where the previous ended.
     let (session, resume_at) = if track == 0 {
         let session = SESSION.fetch_add(1, Ordering::Relaxed) + 1;

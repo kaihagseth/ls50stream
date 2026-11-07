@@ -67,7 +67,7 @@ impl SharedAudio {
     }
 
     /// Serve the region to the driver over XPC. `allowed_uid`: the peer uid besides root
-    /// (coreaudiod's, or our own when developing with the test harness).
+    /// (coreaudiod's).
     pub fn listen(&self, service: &str, allowed_uid: u32) -> std::io::Result<()> {
         let service = CString::new(service)?;
         match unsafe { ls50stream_xpc_listen(service.as_ptr(), self.base as *mut libc::c_void, SIZE, allowed_uid) } {

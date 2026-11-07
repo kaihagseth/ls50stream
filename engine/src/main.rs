@@ -53,32 +53,23 @@ const TRACK_CHECK: Duration = Duration::from_secs(2);
 const STUCK_AFTER: Duration = Duration::from_secs(10);
 
 struct Args {
-    dev: bool,
     port: u16,
-    mach_service: String,
     /// Serial numbers (UPnP serialNumber) to restrict to; empty: any LS50W.
     speakers: Vec<String>,
-    segment_secs: Option<f64>,
 }
 
 fn parse_args() -> Args {
     let mut args = Args {
-        dev: false,
         port: DEFAULT_PORT,
-        mach_service: shm::MACH_SERVICE.to_string(),
         speakers: Vec::new(),
-        segment_secs: None,
     };
     let mut it = std::env::args().skip(1);
     while let Some(arg) = it.next() {
         match arg.as_str() {
-            "--dev" => args.dev = true,
             "--port" => args.port = it.next().and_then(|p| p.parse().ok()).expect("--port <number>"),
-            "--mach-service" => args.mach_service = it.next().expect("--mach-service <name>"),
             "--speaker" => args.speakers.push(it.next().expect("--speaker <serial>")),
-            "--segment-secs" => args.segment_secs = it.next().and_then(|s| s.parse().ok()),
             other => {
-                eprintln!("usage: ls50streamd [--dev] [--port N] [--mach-service NAME] [--speaker SERIAL]... [--segment-secs S]\nunknown argument: {other}");
+                eprintln!("usage: ls50streamd [--port N] [--speaker SERIAL]...\nunknown argument: {other}");
                 std::process::exit(2);
             }
         }
@@ -140,14 +131,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     info!("ls50streamd {} starting; speakers: {wanted}", env!("CARGO_PKG_VERSION"));
 
     let shared = SharedAudio::create()?;
-    let allowed_uid = if args.dev { unsafe { libc::getuid() } } else { coreaudiod_uid() };
-    shared.listen(&args.mach_service, allowed_uid)?;
-    info!("Serving audio to the driver on mach service '{}'", args.mach_service);
+    shared.listen(shm::MACH_SERVICE, coreaudiod_uid())?;
+    info!("Serving audio to the driver on mach service '{}'", shm::MACH_SERVICE);
 
-    if let Some(secs) = args.segment_secs {
-        info!("Tracks of {secs} s (testing)");
-        http::TRACK_OVERRIDE_MS.store((secs * 1000.0) as u64, Ordering::Relaxed);
-    }
     let live = stream::start(shared.clone());
     let listener = TcpListener::bind(SocketAddr::from((Ipv4Addr::UNSPECIFIED, args.port))).await?;
     let rate_source = shared.clone();
